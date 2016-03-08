@@ -13,3 +13,4 @@ docs/
 bower.json
 Brocfile.js
 testem.json
+node-tests/
