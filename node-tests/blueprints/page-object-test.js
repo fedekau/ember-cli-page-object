@@ -14,13 +14,13 @@ describe('Acceptance: ember generate and destroy page-object', function() {
       target: 'app',
       files: [{
         file: 'tests/pages/foo.js',
-        contents: [
-          "import PageObject from 'frontend/tests/page-object';",
+        contains: [
+          "import PageObject from 'my-app/tests/page-object';",
           'let {',
           '  visitable',
           '} = PageObject;',
           'export default PageObject.create({',
-          "  visit: visitable('/')'",
+          "  visit: visitable('/')",
           '});'
         ]
       }]
@@ -33,14 +33,14 @@ describe('Acceptance: ember generate and destroy page-object', function() {
       // define files to assert, and their contents
       target: 'addon',
       files: [{
-        file: 'tests/pages/foo.js',
-        contents: [
+        file: 'tests/pages/bar.js',
+        contains: [
           "import PageObject from 'dummy/tests/page-object';",
           'let {',
           '  visitable',
           '} = PageObject;',
           'export default PageObject.create({',
-          "  visit: visitable('/')'",
+          "  visit: visitable('/')",
           '});'
         ]
       }]
