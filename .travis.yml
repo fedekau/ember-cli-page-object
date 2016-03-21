@@ -36,4 +36,5 @@ install:
   - bower install
 
 script:
+  - npm run nodetest
   - node ./node_modules/ember-cli/bin/ember try $EMBER_TRY_SCENARIO test
