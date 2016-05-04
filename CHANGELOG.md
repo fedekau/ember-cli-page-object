@@ -1,7 +1,29 @@
 # master
 
+# v1.3.0
+
+- [Feature] Add `property` property
+- [Feature] Add `.is` property
+- [Feature] Add `testContainer` option to all properties
+- [Change] Improve "Element not found" error message
+
+# v1.2.0
+
+- [Feature] Add option to text property to avoid text normalization
+- [Feature] Add `toArray` method to collections
+- [Feature] Add `map` method to collections
+- [Feature] Add `mapBy` method to collections
+- [Feature] Add `filter` method to collections
+- [Feature] Add `filterBy` method to collections
+- [Change] Pull Ceibo from npm instead of Bower
+- [Change] Addon files moved from `test-support/` into `addon/`
+- [Change] Use Ember.assign if possible. Otherwise use Ember.merge
 - [Bugfix] Page object component acts like a promise
 - [Bugfix] ceibo should also be imported in development environment
+
+# v1.1.0
+
+- [Feature] Add support for component integration tests
 
 # v1.0.0
 

@@ -37,6 +37,17 @@ test('normalizes inner text of the element containing newlines', function(assert
   assert.equal(page.foo, 'Hello multi-line world!');
 });
 
+test('avoid text normalization if normalize:false', function(assert) {
+  const denormalizedText = [' \n ', 'Hello', 'multi-line', 'world! ', '\t', '\n'].join('\n');
+  fixture(`<span>${denormalizedText}</span>`);
+
+  let page = create({
+    foo: text('span', { normalize: false })
+  });
+
+  assert.equal(page.foo, denormalizedText);
+});
+
 test('converts &nbsp; characters into standard whitespace characters', function(assert) {
   fixture('<span>This&nbsp;is&nbsp;awesome.</span>');
 
@@ -59,10 +70,16 @@ test('returns empty text when the element doesn\'t have text', function(assert) 
 
 test("raises an error when the element doesn't exist", function(assert) {
   let page = create({
-    foo: text('span')
+    foo: {
+      bar: {
+        baz: {
+          qux: text('span')
+        }
+      }
+    }
   });
 
-  assert.throws(() => page.foo, 'Throws element not found error');
+  assert.throws(() => page.foo.bar.baz.qux, /page\.foo\.bar\.baz\.qux/);
 });
 
 test('looks for elements inside the scope', function(assert) {
@@ -174,4 +191,14 @@ test('returns multiple values', function(assert) {
   });
 
   assert.deepEqual(page.foo, ['lorem', 'ipsum', 'dolor']);
+});
+
+test('looks for elements outside the testing container', function(assert) {
+  fixture('<h1>lorem ipsum</h1>', { useAlternateContainer: true });
+
+  var page = create({
+    foo: text('h1', { testContainer: '#alternate-ember-testing' })
+  });
+
+  assert.equal(page.foo, 'lorem ipsum');
 });

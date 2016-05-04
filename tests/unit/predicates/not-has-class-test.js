@@ -27,12 +27,18 @@ test('returns true when the element doesn\'t have the class', function(assert) {
   assert.ok(page.foo);
 });
 
-test('raises an error when the element doesn\'t exist', function(assert) {
+test("raises an error when the element doesn't exist", function(assert) {
   let page = create({
-    elementDoesNotHaveError: notHasClass('has-error', '.element')
+    foo: {
+      bar: {
+        baz: {
+          qux: notHasClass('has-error', '.element')
+        }
+      }
+    }
   });
 
-  assert.throws(() => page.elementDoesNotHaveError);
+  assert.throws(() => page.foo.bar.baz.qux, /page\.foo\.bar\.baz\.qux/);
 });
 
 test('looks for elements inside the scope', function(assert) {
@@ -140,4 +146,14 @@ test('finds element by index', function(assert) {
   });
 
   assert.ok(page.foo);
+});
+
+test('looks for elements outside the testing container', function(assert) {
+  fixture('<span class="lorem ipsum"></span>', { useAlternateContainer: true });
+
+  let page = create({
+    foo: notHasClass('ipsum', '.lorem', { testContainer: '#alternate-ember-testing' })
+  });
+
+  assert.ok(!page.foo);
 });

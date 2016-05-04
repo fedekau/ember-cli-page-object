@@ -27,7 +27,7 @@ You can find more information about this design pattern here:
 
 Let's work together to improve this addon!
 
-You can find us on the [official Slack](https://ember-community-slackin.herokuapp.com/), join the `ember-cli-page-object` channel or [open an issue on Github](https://github.com/san650/ember-cli-page-object/issues) to request features, report bugs or just to ask any question.
+You can find us on the [official Slack](https://ember-community-slackin.herokuapp.com/), join the `ec-page-object` channel or [open an issue on Github](https://github.com/san650/ember-cli-page-object/issues) to request features, report bugs or just to ask any question.
 
 ## Installation
 
@@ -35,27 +35,10 @@ You can find us on the [official Slack](https://ember-community-slackin.herokuap
 $ ember install ember-cli-page-object
 ```
 
-Or you can install the NPM package and run the installation script.
+Or you can install the NPM package directly.
 
 ```sh
 $ npm install --save-dev ember-cli-page-object@1.1.0
-$ ember generate ember-cli-page-object
-```
-
-When you execute the generator it can ask you for a suitable version of Ceibo library, if there's a conflict then choose `ceibo 1.1.0`.
-
-```
-$ ember g ember-cli-page-object
-version: 2.4.1
-installing ember-cli-page-object
-  install bower package ceibo
-Installing browser packages via Bower...
-  cached git://github.com/san650/ceibo.git#1.1.0
-  conflict Unable to find suitable version for ceibo
-    1) ceibo 1.0.0
-    2) ceibo 1.1.0
-[?] Answer: 2
-Installed browser packages via Bower.
 ```
 
 ## Documentation
@@ -78,6 +61,7 @@ $ ember generate page-object users
 installing
   create tests/pages/users.js
 ```
+
 
 ## Development
 

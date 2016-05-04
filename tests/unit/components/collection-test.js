@@ -1,6 +1,7 @@
 import { test } from 'qunit';
 import { fixture, moduleFor } from '../test-helper';
-import { create, collection, text } from '../../page-object';
+import { create, collection, text, hasClass } from '../../page-object';
+import withIteratorSymbolDefined from '../../helpers/with-iterator-symbol-defined';
 
 moduleFor('Unit | Property | .collection');
 
@@ -54,6 +55,78 @@ test('returns an item', function(assert) {
 
   assert.equal(page.foo(0).text, 'Lorem');
   assert.equal(page.foo(1).text, 'Ipsum');
+});
+
+test('collects an array of items', function(assert) {
+  fixture(`
+    <span>Lorem</span>
+    <span>Ipsum</span>
+  `);
+
+  let page = create({
+    foo: collection({
+      itemScope: 'span',
+
+      item: {
+        text: text()
+      }
+    })
+  });
+
+  let array = page.foo().toArray();
+  assert.equal(array.length, 2);
+  assert.equal(array[0].text, 'Lorem');
+  assert.equal(array[1].text, 'Ipsum');
+});
+
+test('delegates configured methods to `toArray()`', function(assert) {
+  fixture(`
+    <span class="special">Lorem</span>
+    <span>Ipsum</span>
+  `);
+
+  let page = create({
+    foo: collection({
+      itemScope: 'span',
+
+      item: {
+        isSpecial: hasClass('special'),
+        text: text()
+      }
+    })
+  });
+
+  assert.deepEqual(page.foo().map(i => i.text), ['Lorem', 'Ipsum']);
+  assert.deepEqual(page.foo().mapBy('text'), ['Lorem', 'Ipsum']);
+
+  assert.deepEqual(page.foo().filter(i => i.isSpecial).map(i => i.text), ['Lorem']);
+  assert.deepEqual(page.foo().filterBy('isSpecial').map(i => i.text), ['Lorem']);
+});
+
+test('produces an iterator for items', function(assert) {
+  fixture(`
+    <span>Lorem</span>
+    <span>Ipsum</span>
+  `);
+
+  let page = create({
+    foo: collection({
+      itemScope: 'span',
+
+      item: {
+        text: text()
+      }
+    })
+  });
+
+  let textContents = [];
+  withIteratorSymbolDefined(() => {
+    for (let item of page.foo()) {
+      textContents.push(item.text);
+    }
+  });
+
+  assert.deepEqual(textContents, ['Lorem', 'Ipsum']);
 });
 
 test('looks for elements inside the scope', function(assert) {
@@ -262,4 +335,40 @@ test('sets correct scope to child collections', function(assert) {
   });
 
   assert.equal(page.foo(0).bar(0).text, 'Ipsum');
+});
+
+test("returns the page object path when item's element doesn't exist", function(assert) {
+  let page = create({
+    foo: {
+      bar: collection({
+        item: {
+          baz: {
+            qux: text('span')
+          }
+        }
+      })
+    }
+  });
+
+  assert.throws(function() { return page.foo.bar(1).baz.qux; }, function(error) {
+    return /page\.foo\.bar\(1\)\.baz\.qux/.test(error.message);
+  });
+});
+
+test("returns the page object path when collection's element doesn't exist", function(assert) {
+  let page = create({
+    foo: {
+      bar: collection({
+        scope: 'span',
+
+        baz: {
+          qux: text('span')
+        }
+      })
+    }
+  });
+
+  assert.throws(function() { return page.foo.bar().baz.qux; }, function(error) {
+    return /page\.foo\.bar\(\)\.baz\.qux/.test(error.message);
+  });
 });

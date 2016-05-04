@@ -1,9 +1,7 @@
 import { test } from 'qunit';
 import { fixture, moduleFor } from '../test-helper';
 import { create, attribute } from '../../page-object';
-import {
-  test_throws_if_not_multiple
-} from '../shared';
+import { test_throws_if_not_multiple } from '../shared';
 
 moduleFor('Unit | Property | .attribute');
 
@@ -29,10 +27,16 @@ test("returns null when attribute doesn't exist", function(assert) {
 
 test("raises an error when the element doesn't exist", function(assert) {
   let page = create({
-    foo: attribute('placeholder', ':input')
+    foo: {
+      bar: {
+        baz: {
+          qux: attribute('placeholder', ':input')
+        }
+      }
+    }
   });
 
-  assert.throws(() => page.foo, 'Throws element not found error');
+  assert.throws(() => page.foo.bar.baz.qux, /page\.foo\.bar\.baz\.qux/);
 });
 
 test('looks for elements inside the scope', function(assert) {
@@ -114,6 +118,16 @@ test('finds element by index', function(assert) {
 
   let page = create({
     foo: attribute('placeholder', ':input', { at: 1 })
+  });
+
+  assert.equal(page.foo, 'a value');
+});
+
+test('looks for elements outside the testing container', function(assert) {
+  fixture('<input placeholder="a value">', { useAlternateContainer: true });
+
+  var page = create({
+    foo: attribute('placeholder', ':input', { testContainer: '#alternate-ember-testing' })
   });
 
   assert.equal(page.foo, 'a value');

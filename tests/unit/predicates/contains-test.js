@@ -50,12 +50,18 @@ test("looks for elements inside page's scope", function(assert) {
   assert.ok(page.foo('ipsum'));
 });
 
-test('raises an error when the element doesn\'t exist', function(assert) {
+test("raises an error when the element doesn't exist", function(assert) {
   let page = create({
-    foo: contains('.element')
+    foo: {
+      bar: {
+        baz: {
+          qux: contains('.element')
+        }
+      }
+    }
   });
 
-  assert.throws(() => page.foo('baz'), 'Throws element not found error');
+  assert.throws(() => page.foo.bar.baz.qux('baz'), /page\.foo\.bar\.baz\.qux/);
 });
 
 test('resets scope', function(assert) {
@@ -127,5 +133,15 @@ test('finds element by index', function(assert) {
   });
 
   assert.ok(!page.foo('lorem'));
+  assert.ok(page.foo('ipsum'));
+});
+
+test('looks for elements outside the testing container', function(assert) {
+  fixture('Lorem <span>ipsum</span>', { useAlternateContainer: true });
+
+  let page = create({
+    foo: contains('span', { testContainer: '#alternate-ember-testing' })
+  });
+
   assert.ok(page.foo('ipsum'));
 });

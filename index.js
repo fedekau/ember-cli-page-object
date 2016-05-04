@@ -4,11 +4,26 @@
 module.exports = {
   name: 'ember-cli-page-object',
 
-  included: function(app) {
-    this._super.included(app);
-
-    if (app.env === 'test' || app.env === 'development') {
-      app.import(app.bowerDirectory + '/ceibo/index.js');
+  options: {
+    nodeAssets: {
+      ceibo: function() {
+        return {
+          enabled: this._shouldIncludeFiles(),
+          import: ['index.js']
+        };
+      }
     }
+  },
+
+  treeFor: function(/*name*/) {
+    if (!this._shouldIncludeFiles()) {
+      return;
+    }
+
+    return this._super.treeFor.apply(this, arguments);
+  },
+
+  _shouldIncludeFiles: function() {
+    return this.app.env !== 'production';
   }
 };
